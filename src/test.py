@@ -1,6 +1,6 @@
 """Section 5, tests 1-5: the naive measure, the purified measure and the buy/sell measures."""
 import pandas as pd
-from helpers import load_weekly, nw_t, rank_corr, quintile_returns, standardize, fama_macbeth
+from helpers import load_weekly, nw_t, rank_corr, quintile_returns, standardize, fama_macbeth, double_sort, long_short
 
 
 all_contracts, contracts_90d = load_weekly()
@@ -63,3 +63,24 @@ diff = coefs["cv90_buy"] - coefs["cv90_sell"]
 print(f"\nbuy - sell: {diff.mean():.4f}  (t = {nw_t(diff):.2f})")
 print("correlation of buy and sell measures (average week):",
       round(rank_corr(contracts_90d, "cv90_buy", "cv90_sell").mean(), 3))
+
+# ---------- test 4: double sorts ----------
+print("\nTest 4: high minus low signal (3 groups), within 3 groups of size or age")
+for signal, sample, df, control in [("naive", "all", all_contracts, "size"),
+                                    ("naive", "all", all_contracts, "age"),
+                                    ("cv90", "90d", contracts_90d, "size"),
+                                    ("cv90", "90d", contracts_90d, "age")]:
+    ds = double_sort(df, control, signal)
+    print(f"\n{signal} [{sample}], within groups of {control}")
+    for c, label in [(1, "group 1 (lowest)"), (2, "group 2"), (3, "group 3 (highest)"), ("avg", "average")]:
+        print(f"   {label:18s} {ds[c].mean():8.4f}  (t = {nw_t(ds[c]):5.2f})")
+
+# ---------- test 5: turnover and costs ----------
+print("\nTest 5: long group 1, short group 5; weekly return before and after costs")
+for signal, sample, df in TESTS[:3]:            # naive (all), naive (90d), cv90 (90d)
+    port = long_short(df, signal)
+    print(f"\n{signal} [{sample}]   turnover per week: {port['turnover'].mean():.2f}")
+    print(f"   before costs     {port['gross'].mean():8.4f}  (t = {nw_t(port['gross']):5.2f})")
+    for bp in [5, 10]:
+        net = port["gross"] - bp / 10000 * port["turnover"]     # each unit traded costs bp basis points
+        print(f"   after {bp:2d} bp      {net.mean():8.4f}  (t = {nw_t(net):5.2f})")

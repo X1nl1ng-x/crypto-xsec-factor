@@ -100,3 +100,46 @@ def fama_macbeth(df, xs, ret="ret"):
         b = np.linalg.lstsq(X.values, week[ret].values, rcond=None)[0]    # OLS coefficients
         coefs[date] = pd.Series(b, index=X.columns)
     return pd.DataFrame.from_dict(coefs, orient="index")
+
+def double_sort(df, control, signal, ret="ret"):
+    """For each week: split the coins into 3 groups by the control (e.g. size); within each group,
+    split again into 3 groups by the signal and take high minus low.
+    One row per week: high-minus-low within control groups 1, 2, 3, and their average."""
+    rows = {}
+    for date, week in df.groupby("date"):
+        week = week.dropna(subset=[control, signal, ret])
+        control_group = groups(week[control], 3)
+        hl = {}
+        for c in [1, 2, 3]:
+            part = week[control_group == c]                  # coins of similar size (or age)
+            signal_group = groups(part[signal], 3)
+            high = part.loc[signal_group == 3, ret].mean()
+            low = part.loc[signal_group == 1, ret].mean()
+            hl[c] = high - low
+        rows[date] = hl
+    out = pd.DataFrame.from_dict(rows, orient="index")      # one row per week
+    out["avg"] = out[[1, 2, 3]].mean(axis=1)
+    return out
+
+
+def long_short(df, signal, ret="ret"):
+    """For each week: long group 1 (lowest signal), short group 5 (highest), equal weights.
+    This is the trade the hypothesis suggests: high variability -> low returns.
+    One row per week: the return before costs, and the turnover = sum of |weight change|
+    over both legs (it ignores how weights drift during the week)."""
+    rows = {}
+    last_long = pd.Series(dtype=float)      # last week's weights (empty in the first week)
+    last_short = pd.Series(dtype=float)
+    for date, week in df.groupby("date"):
+        week = week.dropna(subset=[signal, ret])
+        g = groups(week[signal], 5)
+        coin = week["symbol"] + "_" + week["listing"].astype(str)     # one id per listing
+        long = pd.Series(1 / (g == 1).sum(), index=coin[g == 1])       # equal weights, sum to 1
+        short = pd.Series(1 / (g == 5).sum(), index=coin[g == 5])
+        # weight change of each coin; a coin held in only one of the two weeks has weight 0 in the other
+        turnover = (long.sub(last_long, fill_value=0).abs().sum()
+                    + short.sub(last_short, fill_value=0).abs().sum())
+        gross = week.loc[g == 1, ret].mean() - week.loc[g == 5, ret].mean()
+        rows[date] = {"gross": gross, "turnover": turnover}
+        last_long, last_short = long, short
+    return pd.DataFrame.from_dict(rows, orient="index")
