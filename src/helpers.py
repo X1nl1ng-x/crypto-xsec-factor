@@ -22,6 +22,7 @@ def load_weekly():
     first_week = coins[coins >= MIN_COINS].index.min()      # first week with >= 20 coins that have cv90
     w = w[w["date"] >= first_week].copy()                   # keep that week and all later weeks
     w["log_age"] = np.log(w["age"])
+    w["log_naive"] = np.log(w["naive"])                     # for regressions (naive is very skewed)
     print(PERIOD, "sample:", w["date"].min().date(), "to", w["date"].max().date(),
           " weeks:", w["date"].nunique(), " coin-weeks:", len(w))
     return w, w[w["cv90"].notna()]
@@ -70,3 +71,32 @@ def quintile_returns(df, signal, ret="ret"):
     q = pd.DataFrame.from_dict(rows, orient="index")        # one row per week
     q["H-L"] = q[5] - q[1]
     return q
+
+def zscore(x): # x is a pandas Series of one variable in one week
+    """One variable in one week: clip at the 1st and 99th percentiles, then standardize."""
+    x = x.clip(x.quantile(0.01), x.quantile(0.99))
+    # z-score = (value - mean) / standard deviation
+    return (x - x.mean()) / x.std()
+
+
+def standardize(df, cols):
+    """Clip and standardize the columns cols within each week; add size squared."""
+    df = df.copy()
+    for col in cols:
+        df[col] = df.groupby("date")[col].transform(zscore)
+    # use the squared size as a regressor in regressions, to capture the non-linear effect of size
+    df["size_sq"] = df["size"] ** 2
+    return df
+
+
+def fama_macbeth(df, xs, ret="ret"):
+    """For each week: regress the return on the variables xs (with a constant).
+    One row of coefficients per week."""
+    coefs = {}
+    for date, week in df.groupby("date"):
+        week = week.dropna(subset=xs + [ret])
+        X = week[xs].copy()
+        X["const"] = 1.0                                                   # to calculate the intercept
+        b = np.linalg.lstsq(X.values, week[ret].values, rcond=None)[0]    # OLS coefficients
+        coefs[date] = pd.Series(b, index=X.columns)
+    return pd.DataFrame.from_dict(coefs, orient="index")
