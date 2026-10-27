@@ -119,3 +119,29 @@ All t-statistics use Newey-West standard errors with 4 lags. Because I run many 
 - RQ2 (diagnosis) is judged by the predictions in Section 2.
 - RQ1 and RQ3: the purified measure has a negative high-minus-low spread and a negative Fama-MacBeth coefficient after controls, with |t| > 2 in-sample, and the same sign out-of-sample.
 - RQ4: the buy-side coefficient is more negative than the sell-side coefficient, with |t| > 2 for the difference.
+
+
+## Deviations from the pre-registration
+
+- 2026-10-26, start week: "the first week with enough data" is set to the first week in
+  which at least 20 coins have the purified measure (18 May 2020), so that every week has
+  enough coins for five groups. The 120-day robustness check uses the same rule for coins
+  with 120 days of data (first week: 15 June 2020).
+- 2026-10-26, log of the naive measure: the naive measure is a raw dollar amount and very
+  skewed (average weekly skewness 9.2), so in a linear regression a few of the largest coins
+  drive the slope. Chordia et al. take logs of their variability measures, and size is in
+  logs too. I therefore add Fama-MacBeth regressions with log(naive). This was added after
+  seeing that the raw version shows no relation in the regression; both versions are
+  reported. Rank-based tests (rank IC, sorts) do not change with the log.
+
+## Exploratory hypothesis (added 2026-10-27, after the in-sample results; not pre-registered)
+
+In-sample, the purified measure predicts lower returns in ranks (rank IC < 0) but not in
+average returns (quintile spread and Fama-MacBeth coefficient near zero), and the sign of the
+average-return spread changes from year to year. A possible reason: coins with more variable
+trading activity usually do worse, but a few of them rise sharply, which pulls their average
+up. Two checks, fixed before looking at the out-of-sample data (`src/explore.py`):
+(i) the spread of median returns between group 5 and group 1 is negative, with |t| > 2;
+(ii) the share of coin-weeks with a return above +50% is higher in group 5 than in group 1.
+I run them once out-of-sample, together with the pre-registered tests. Because the
+hypothesis comes from the in-sample data, only the out-of-sample check counts as evidence.

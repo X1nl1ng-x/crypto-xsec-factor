@@ -1,0 +1,19 @@
+in sample: 2020-05-18 to 2024-12-30  weeks: 242  coin-weeks: 38684
+
+H1, H2: average weekly rank correlation (1 = same ranking, 0 = unrelated)
+   naive vs size [all]   0.777
+   naive vs size [90d]   0.781
+   naive vs cv90 [90d]  -0.061
+   cv90  vs size [90d]  -0.045
+
+H3: share of new coins (< 30 days) in each naive group; all groups together: 0.037
+group
+1    0.030
+2    0.027
+3    0.030
+4    0.043
+5    0.056
+
+H3: naive measure with and without new coins
+   all           IC -0.072 (t = -7.14)   H-L -0.0126 (t = -2.46)
+   no new coins  IC -0.063 (t = -6.06)   H-L -0.0078 (t = -1.85)
