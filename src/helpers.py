@@ -60,14 +60,15 @@ def groups(x, n):
     return pd.qcut(x.rank(method="first"), n, labels=False) + 1
 
 
-def quintile_returns(df, signal, ret="ret"):
-    """For each week: sort the coins into 5 groups by the signal; average return of each group.
+def quintile_returns(df, signal, ret="ret", stat = "mean"):
+    """For each week: sort the coins into 5 groups by the signal; 
+    mean (or meadian) return of each group.
     One row per week, with columns 1-5 and H-L (group 5 minus group 1)."""
     rows = {}
     for date, week in df.groupby("date"):
         week = week.dropna(subset=[signal, ret])
         g = groups(week[signal], 5)
-        rows[date] = week.groupby(g)[ret].mean()            # average return of groups 1-5
+        rows[date] = week.groupby(g)[ret].agg(stat)         # mean (or median) return of groups 1-5
     q = pd.DataFrame.from_dict(rows, orient="index")        # one row per week
     q["H-L"] = q[5] - q[1]
     return q
