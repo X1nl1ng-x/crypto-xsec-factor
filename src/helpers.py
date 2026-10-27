@@ -102,8 +102,8 @@ def fama_macbeth(df, xs, ret="ret"):
     return pd.DataFrame.from_dict(coefs, orient="index")
 
 def double_sort(df, control, signal, ret="ret"):
-    """For each week: split the coins into 3 groups by the control (e.g. size); within each group,
-    split again into 3 groups by the signal and take high minus low.
+    """For each week: split the coins into 3 groups by the control (e.g. size); 
+    within each group, split again into 3 groups by the signal and take high minus low.
     One row per week: high-minus-low within control groups 1, 2, 3, and their average."""
     rows = {}
     for date, week in df.groupby("date"):
@@ -136,7 +136,8 @@ def long_short(df, signal, ret="ret"):
         coin = week["symbol"] + "_" + week["listing"].astype(str)     # one id per listing
         long = pd.Series(1 / (g == 1).sum(), index=coin[g == 1])       # equal weights, sum to 1
         short = pd.Series(1 / (g == 5).sum(), index=coin[g == 5])
-        # weight change of each coin; a coin held in only one of the two weeks has weight 0 in the other
+        # weight change of each coin: how much more or less we hold than last week. 
+        # If a coin is not held in one of the two weeks, its weight is 0.
         turnover = (long.sub(last_long, fill_value=0).abs().sum()
                     + short.sub(last_short, fill_value=0).abs().sum())
         gross = week.loc[g == 1, ret].mean() - week.loc[g == 5, ret].mean()
