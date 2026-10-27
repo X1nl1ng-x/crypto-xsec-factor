@@ -1,0 +1,133 @@
+out sample: 2025-01-06 to 2026-09-21  weeks: 90  coin-weeks: 42989
+
+Test 1: rank IC
+   signal sample  mean IC      t
+    naive    all   -0.062 -6.756
+    naive    90d   -0.048 -4.691
+     cv90    90d   -0.039 -3.286
+ cv90_buy    90d   -0.039 -3.373
+cv90_sell    90d   -0.039 -3.219
+
+Test 2: average weekly return of the five groups (Q1 = lowest signal)
+   signal sample      Q1      Q2      Q3      Q4      Q5     H-L       t
+    naive    all -0.0040 -0.0038 -0.0029 -0.0082 -0.0061 -0.0021 -0.4683
+    naive    90d -0.0055 -0.0022 -0.0046 -0.0064 -0.0095 -0.0040 -1.2155
+     cv90    90d -0.0077 -0.0062 -0.0045 -0.0026 -0.0074  0.0004  0.1124
+ cv90_buy    90d -0.0074 -0.0069 -0.0037 -0.0032 -0.0071  0.0003  0.0871
+cv90_sell    90d -0.0079 -0.0056 -0.0049 -0.0032 -0.0067  0.0012  0.3715
+
+Test 3: Fama-MacBeth, average weekly coefficient per 1 standard deviation
+
+naive alone [all]
+   naive        0.0002  (t =  0.09)
+
+naive + size [all]
+   naive        0.0024  (t =  0.78)
+   size        -0.0001  (t = -0.06)
+   size_sq     -0.0021  (t = -1.26)
+
+naive + age [all]
+   naive        0.0004  (t =  0.24)
+   log_age     -0.0039  (t = -1.27)
+
+naive + controls [90d]
+   naive        0.0024  (t =  0.67)
+   size        -0.0000  (t = -0.01)
+   size_sq     -0.0012  (t = -0.75)
+   log_age     -0.0040  (t = -2.01)
+   mom          0.0052  (t =  2.52)
+   rev         -0.0039  (t = -2.46)
+   vol         -0.0027  (t = -1.29)
+   fund7        0.0008  (t =  0.54)
+
+log naive alone [all]
+   log_naive   -0.0006  (t = -0.35)
+
+log naive + size [all]
+   log_naive    0.0000  (t =  0.00)
+   size         0.0000  (t =  0.02)
+   size_sq     -0.0006  (t = -0.73)
+
+log naive + age [all]
+   log_naive   -0.0005  (t = -0.31)
+   log_age     -0.0037  (t = -1.23)
+
+log naive + controls [90d]
+   log_naive   -0.0028  (t = -1.05)
+   size         0.0018  (t =  0.66)
+   size_sq      0.0003  (t =  0.54)
+   log_age     -0.0035  (t = -1.80)
+   mom          0.0056  (t =  2.89)
+   rev         -0.0038  (t = -2.33)
+   vol         -0.0024  (t = -1.06)
+   fund7        0.0001  (t =  0.07)
+
+cv90 alone [90d]
+   cv90         0.0008  (t =  0.60)
+
+cv90 + controls [90d]
+   cv90        -0.0012  (t = -0.84)
+   size         0.0004  (t =  0.26)
+   size_sq     -0.0001  (t = -0.18)
+   log_age     -0.0041  (t = -2.04)
+   mom          0.0048  (t =  2.48)
+   rev         -0.0038  (t = -2.31)
+   vol         -0.0022  (t = -0.97)
+   fund7       -0.0000  (t = -0.02)
+
+buy + sell + controls [90d]
+   cv90_buy    -0.0084  (t = -0.36)
+   cv90_sell    0.0071  (t =  0.31)
+   size         0.0004  (t =  0.27)
+   size_sq     -0.0001  (t = -0.19)
+   log_age     -0.0042  (t = -2.08)
+   mom          0.0048  (t =  2.47)
+   rev         -0.0038  (t = -2.27)
+   vol         -0.0020  (t = -0.88)
+   fund7       -0.0000  (t = -0.01)
+
+buy - sell: -0.0155  (t = -0.33)
+correlation of buy and sell measures (average week): 0.998
+
+Test 4: high minus low signal (3 groups), within 3 groups of size or age
+
+naive [all], within groups of size
+   group 1 (lowest)     0.0018  (t =  0.41)
+   group 2             -0.0012  (t = -0.24)
+   group 3 (highest)    0.0041  (t =  0.55)
+   average              0.0015  (t =  0.40)
+
+naive [all], within groups of age
+   group 1 (lowest)    -0.0074  (t = -0.78)
+   group 2              0.0002  (t =  0.04)
+   group 3 (highest)   -0.0013  (t = -0.48)
+   average             -0.0028  (t = -0.72)
+
+cv90 [90d], within groups of size
+   group 1 (lowest)     0.0045  (t =  1.57)
+   group 2              0.0049  (t =  1.09)
+   group 3 (highest)   -0.0047  (t = -0.87)
+   average              0.0016  (t =  0.52)
+
+cv90 [90d], within groups of age
+   group 1 (lowest)     0.0075  (t =  1.42)
+   group 2             -0.0048  (t = -1.06)
+   group 3 (highest)   -0.0031  (t = -1.06)
+   average             -0.0001  (t = -0.04)
+
+Test 5: long group 1, short group 5; weekly return before and after costs
+
+naive [all]   turnover per week: 1.65
+   before costs       0.0021  (t =  0.47)
+   after  5 bp        0.0013  (t =  0.29)
+   after 10 bp        0.0005  (t =  0.11)
+
+naive [90d]   turnover per week: 1.62
+   before costs       0.0040  (t =  1.22)
+   after  5 bp        0.0032  (t =  0.97)
+   after 10 bp        0.0024  (t =  0.73)
+
+cv90 [90d]   turnover per week: 0.53
+   before costs      -0.0004  (t = -0.11)
+   after  5 bp       -0.0006  (t = -0.20)
+   after 10 bp       -0.0009  (t = -0.28)

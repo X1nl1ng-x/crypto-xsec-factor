@@ -1,0 +1,14 @@
+out sample: 2025-01-06 to 2026-09-21  weeks: 90  coin-weeks: 42989
+
+(i) Mean and median weekly return of the five cv90 groups (Q1 = lowest)
+weekly return      Q1      Q2      Q3      Q4      Q5     H-L       t
+         mean -0.0077 -0.0062 -0.0045 -0.0026 -0.0074  0.0004  0.1124
+       median -0.0208 -0.0242 -0.0260 -0.0288 -0.0275 -0.0067 -2.7673
+
+(ii) Share of coin-weeks with a return above +50%, by cv90 group (in %)
+group
+1    0.74
+2    1.14
+3    1.71
+4    1.90
+5    1.85
