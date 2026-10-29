@@ -133,7 +133,7 @@ All t-statistics use Newey-West standard errors with 4 lags. Because I run many 
   logs too. I therefore add Fama-MacBeth regressions with log(naive). This was added after
   seeing that the raw version shows no relation in the regression; both versions are
   reported. Rank-based tests (rank IC, sorts) do not change with the log.
-  2026-10-29, funding (bug fix, found after the out-of-sample run): returns subtracted the
+- 2026-10-29, funding (bug fix, found after the out-of-sample run): returns subtracted the
   sum of the funding rates, which charges funding on the entry value of the position.
   Binance charges each settlement on the position value at that moment (rate x mark price).
   Funding is now rate x price at settlement (the open of that hour, as a stand-in for the
