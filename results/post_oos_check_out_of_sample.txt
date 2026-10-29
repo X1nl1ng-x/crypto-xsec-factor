@@ -22,8 +22,8 @@ group
 5    1.68
 
 (iv) Median return, high minus low cv90 (3 groups), within 3 groups of 30-day return volatility
-   group 1 (lowest)    -0.0073  (t = -2.92)
-   group 2              0.0072  (t =  2.16)
-   group 3 (highest)   -0.0053  (t = -0.71)
-   average             -0.0018  (t = -0.49)
+   group 1 (lowest)    -0.0047  (t = -2.83)
+   group 2             -0.0026  (t = -0.99)
+   group 3 (highest)   -0.0050  (t = -0.94)
+   average             -0.0041  (t = -1.64)
 rank correlation of cv90 and return volatility (average week): 0.284

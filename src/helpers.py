@@ -103,7 +103,7 @@ def fama_macbeth(df, xs, ret="ret"):
     return pd.DataFrame.from_dict(coefs, orient="index")
 
 def double_sort(df, control, signal, ret="ret", stat="mean"):
-    """For each week: split the coins into 3 groups by the control (e.g. size); 
+    """For each week: split the coins into 3 groups by the control (e.g. size);
     within each group, split again into 3 groups by the signal and take high minus low.
     One row per week: high-minus-low within control groups 1, 2, 3, and their average."""
     rows = {}
@@ -114,15 +114,12 @@ def double_sort(df, control, signal, ret="ret", stat="mean"):
         for c in [1, 2, 3]:
             part = week[control_group == c]                  # coins of similar size (or age)
             signal_group = groups(part[signal], 3)
-            high = part.loc[signal_group == 3, ret].mean()
-            low = part.loc[signal_group == 1, ret].mean()
+            high = part.loc[signal_group == 3, ret].agg(stat)     # mean (or median) return
+            low = part.loc[signal_group == 1, ret].agg(stat)
             hl[c] = high - low
         rows[date] = hl
     out = pd.DataFrame.from_dict(rows, orient="index")      # one row per week
     out["avg"] = out[[1, 2, 3]].mean(axis=1)
-
-    high = part.loc[signal_group == 3, ret].agg(stat)
-    low = part.loc[signal_group == 1, ret].agg(stat)
     return out
 
 
