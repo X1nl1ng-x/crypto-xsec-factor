@@ -103,36 +103,37 @@ def to_daily(k, f):
 
     return daily.reset_index()
 
-# ---------- build the daily panel for all coins ----------
-symbols = sorted(s for s in os.listdir(f"{RAW}/klines")
-                 if os.path.isdir(f"{RAW}/klines/{s}"))      # folders only (skip .DS_Store)
-panel = []
-for i, sym in enumerate(symbols):
-    d = to_daily(load_klines(sym), load_funding(sym))
-    d["symbol"] = sym
-    panel.append(d)
-    if i % 50 == 0:
-        print(f"{i}/{len(symbols)} {sym}")
+if __name__ == "__main__":      # run the code below only when this file is run directly
+    # ---------- build the daily panel for all coins ----------
+    symbols = sorted(s for s in os.listdir(f"{RAW}/klines")
+                    if os.path.isdir(f"{RAW}/klines/{s}"))      # folders only (skip .DS_Store)
+    panel = []
+    for i, sym in enumerate(symbols):
+        d = to_daily(load_klines(sym), load_funding(sym))
+        d["symbol"] = sym
+        panel.append(d)
+        if i % 50 == 0:
+            print(f"{i}/{len(symbols)} {sym}")
 
-panel = pd.concat(panel, ignore_index=True)
+    panel = pd.concat(panel, ignore_index=True)
 
-# ---------- contracts that stopped trading and came back later ----------
-# Some contracts stopped trading for weeks or years (frozen price, zero volume) and were relisted later. 
-# as a new listing: 0 = first listing, 1 = relisted.
-panel = panel[panel["dv"] > 0].copy() # only keep rows with non-zero daily volume (drop frozen rows)
-panel["gap"] = panel.groupby("symbol")["date"].diff().dt.days      # days since this coin's previous row
-panel["new_listing"] = panel["gap"] > 7
-panel["listing"] = panel.groupby("symbol")["new_listing"].cumsum()  # 0 = first listing, 1 = relisted
-panel = panel.drop(columns=["gap", "new_listing"])
+    # ---------- contracts that stopped trading and came back later ----------
+    # Some contracts stopped trading for weeks or years (frozen price, zero volume) and were relisted later. 
+    # as a new listing: 0 = first listing, 1 = relisted.
+    panel = panel[panel["dv"] > 0].copy() # only keep rows with non-zero daily volume (drop frozen rows)
+    panel["gap"] = panel.groupby("symbol")["date"].diff().dt.days      # days since this coin's previous row
+    panel["new_listing"] = panel["gap"] > 7
+    panel["listing"] = panel.groupby("symbol")["new_listing"].cumsum()  # 0 = first listing, 1 = relisted
+    panel = panel.drop(columns=["gap", "new_listing"])
 
-os.makedirs("data/clean", exist_ok=True)
-panel.to_parquet("data/clean/daily_panel.parquet", index=False)
+    os.makedirs("data/clean", exist_ok=True)
+    panel.to_parquet("data/clean/daily_panel.parquet", index=False)
 
-print("coins:", panel["symbol"].nunique(), " rows:", len(panel))
-print("days with < 24 hours:", (panel["n_hours"] < 24).sum())
-print("days without funding:", panel["funding"].isna().sum())
-print("coins with some missing funding:",
-      panel.loc[panel["funding"].isna(), "symbol"].nunique())
+    print("coins:", panel["symbol"].nunique(), " rows:", len(panel))
+    print("days with < 24 hours:", (panel["n_hours"] < 24).sum())
+    print("days without funding:", panel["funding"].isna().sum())
+    print("coins with some missing funding:",
+        panel.loc[panel["funding"].isna(), "symbol"].nunique())
 
-relisted = panel.groupby("symbol")["listing"].max()
-print("relisted symbols:", list(relisted[relisted > 0].index))
+    relisted = panel.groupby("symbol")["listing"].max()
+    print("relisted symbols:", list(relisted[relisted > 0].index))
