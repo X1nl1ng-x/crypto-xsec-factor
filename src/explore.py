@@ -2,7 +2,7 @@
 Hypothesis: coins with more variable trading activity usually do worse (lower median return),
 but a few of them rise sharply, so their average return is not lower."""
 import pandas as pd
-from helpers import load_weekly, nw_t, groups, quintile_returns
+from helpers import load_weekly, nw_t, groups, quintile_returns, double_sort, rank_corr
 
 all_contracts, contracts_90d = load_weekly()
 
@@ -25,3 +25,17 @@ for date, week in df.groupby("date"):
 df["big_winner"] = df["ret"] > 0.5
 print("\n(ii) Share of coin-weeks with a return above +50%, by cv90 group (in %)")
 print((df.groupby("group")["big_winner"].mean() * 100).round(2).to_string())
+
+# ---------- added after the out-of-sample run: is it just price volatility? ----------
+# (iii) big losers: a return below -33% is the mirror image of +50% (1.5 x 2/3 = 1)
+df["big_loser"] = df["ret"] < -1 / 3
+print("\n(iii) Share of coin-weeks with a return below -33%, by cv90 group (in %)")
+print((df.groupby("group")["big_loser"].mean() * 100).round(2).to_string())
+
+# (iv) median spread of cv90 among coins with similar price volatility
+print("\n(iv) Median return, high minus low cv90 (3 groups), within 3 groups of 30-day return volatility")
+ds = double_sort(contracts_90d, "vol", "cv90", stat="median")
+for c, label in [(1, "group 1 (lowest)"), (2, "group 2"), (3, "group 3 (highest)"), ("avg", "average")]:
+    print(f"   {label:18s} {ds[c].mean():8.4f}  (t = {nw_t(ds[c]):5.2f})")
+print("rank correlation of cv90 and return volatility (average week):",
+      round(rank_corr(contracts_90d, "cv90", "vol").mean(), 3))
