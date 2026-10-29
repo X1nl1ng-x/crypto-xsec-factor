@@ -15,5 +15,5 @@ group
 5    0.056
 
 H3: naive measure with and without new coins
-   all           IC -0.072 (t = -7.14)   H-L -0.0126 (t = -2.46)
-   no new coins  IC -0.063 (t = -6.06)   H-L -0.0078 (t = -1.85)
+   all           IC -0.072 (t = -7.15)   H-L -0.0126 (t = -2.48)
+   no new coins  IC -0.063 (t = -6.07)   H-L -0.0078 (t = -1.87)

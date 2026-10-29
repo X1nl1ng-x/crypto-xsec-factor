@@ -133,6 +133,16 @@ All t-statistics use Newey-West standard errors with 4 lags. Because I run many 
   logs too. I therefore add Fama-MacBeth regressions with log(naive). This was added after
   seeing that the raw version shows no relation in the regression; both versions are
   reported. Rank-based tests (rank IC, sorts) do not change with the log.
+  2026-10-29, funding (bug fix, found after the out-of-sample run): returns subtracted the
+  sum of the funding rates, which charges funding on the entry value of the position.
+  Binance charges each settlement on the position value at that moment (rate x mark price).
+  Funding is now rate x price at settlement (the open of that hour, as a stand-in for the
+  mark price), divided by the entry price, and settlements after a contract's last trade
+  are no longer counted. This matters only for coin-weeks with extreme price moves and large
+  funding: about 1,000 of 82,000 coin-weeks change by more than one percentage point, for
+  example RAVEUSDT in the week of 6 April 2026 (+2,246% before, +2,355% after). No conclusion
+  changes. All in-sample and out-of-sample results were re-run with the corrected returns,
+  so the out-of-sample period has now been used more than once.
 
 ## Exploratory hypothesis (added 2026-10-27, after the in-sample results; not pre-registered)
 

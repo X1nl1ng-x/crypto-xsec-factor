@@ -10,6 +10,7 @@ keep = universe.loc[universe["keep"], "symbol"]
 d = d[d["symbol"].isin(keep)]
 d = d.sort_values(KEYS + ["date"]).reset_index(drop=True)
 d["funding"] = d["funding"].fillna(0.0)     # missing funding = 0
+d["funding_px"] = d["funding_px"].fillna(0.0)
 print("coins:", d["symbol"].nunique(), " listings:", d.groupby(KEYS).ngroups, " rows:", len(d))
 
 
@@ -65,10 +66,10 @@ w["age"] = (w["date"] - w["start"]).dt.days         # days since listing
 # step 2: on Monday we buy at the 01:00 open; from then on a long pays funding
 # (each day's funding runs from 01:00 to 01:00 the next day)
 d["monday"] = d["date"] - pd.to_timedelta(d["date"].dt.dayofweek, unit="D")   # Monday of each day's week
-d["fund_week"] = d.groupby(KEYS + ["monday"])["funding"].transform("sum")     # Mon 01:00 to next Mon 01:00
+d["fund_px_week"] = d.groupby(KEYS + ["monday"])["funding_px"].transform("sum")     # Mon 01:00 to next Mon 01:00
 
-entry = d[KEYS + ["date", "open_01", "funding", "fund_week"]]
-entry = entry.rename(columns={"open_01": "entry", "funding": "paid_1d", "fund_week": "paid_1w"})
+entry = d[KEYS + ["date", "open_01", "funding_px", "fund_px_week"]]
+entry = entry.rename(columns={"open_01": "entry", "funding_px": "paid_1d", "fund_px_week": "paid_1w"})
 w = w.merge(entry, on=KEYS + ["date"], how="left")
 w = w.dropna(subset=["entry"])                                  # not tradable at Monday 01:00
 w = w[w["date"] + pd.Timedelta(days=7) <= d["date"].max()]      # the week must end inside the data
@@ -89,8 +90,10 @@ w.loc[gone_1d, "exit_1d"] = w.loc[gone_1d, "last_close"]
 w.loc[gone_1w, "exit_1w"] = w.loc[gone_1w, "last_close"]
 
 # step 5: returns of a long, net of funding
-w["ret"] = w["exit_1w"] / w["entry"] - 1 - w["paid_1w"]
-w["ret1d"] = w["exit_1d"] / w["entry"] - 1 - w["paid_1d"]
+# funding is charged on the position value at each settlement, so paid / entry price
+# is the funding as a share of the money invested
+w["ret"] = w["exit_1w"] / w["entry"] - 1 - w["paid_1w"] / w["entry"]
+w["ret1d"] = w["exit_1d"] / w["entry"] - 1 - w["paid_1d"] / w["entry"]
 print("delisting exits: week", gone_1w.sum(), " day", gone_1d.sum())
 print("missing returns: week", w["ret"].isna().sum(), " day", w["ret1d"].isna().sum())
 

@@ -37,5 +37,16 @@ print("\n(iv) Median return, high minus low cv90 (3 groups), within 3 groups of 
 ds = double_sort(contracts_90d, "vol", "cv90", stat="median")
 for c, label in [(1, "group 1 (lowest)"), (2, "group 2"), (3, "group 3 (highest)"), ("avg", "average")]:
     print(f"   {label:18s} {ds[c].mean():8.4f}  (t = {nw_t(ds[c]):5.2f})")
+
+# for comparison: the same median spread (3 groups, same coins) without holding volatility fixed
+spread = {}
+for date, week in contracts_90d.dropna(subset=["cv90", "ret", "vol"]).groupby("date"):
+    g = groups(week["cv90"], 3)
+    spread[date] = week.loc[g == 3, "ret"].median() - week.loc[g == 1, "ret"].median()
+spread = pd.Series(spread)
+print(f"   without holding vol fixed {spread.mean():8.4f}  (t = {nw_t(spread):5.2f})")
+shrink = ds["avg"] - spread      # how much holding volatility fixed shrinks the median spread
+print(f"   reduction                 {shrink.mean():8.4f}  (t = {nw_t(shrink):5.2f})")
+
 print("rank correlation of cv90 and return volatility (average week):",
       round(rank_corr(contracts_90d, "cv90", "vol").mean(), 3))

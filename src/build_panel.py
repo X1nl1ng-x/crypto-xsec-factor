@@ -98,8 +98,15 @@ def to_daily(k, f):
         f = f.copy()
         f["day"] = (f["time"] - pd.Timedelta(hours=1)).dt.floor("D")
         daily["funding"] = f.groupby("day")["funding_rate"].sum()
+        # Binance charges funding on the position value at settlement: rate x price at that time.
+        # Price = open of the settlement hour (stand-in for the mark price). Hours after the last
+        # trade have no bar, so their settlements get no price and drop out.
+        f["price"] = f["time"].map(k.set_index("time")["open"])
+        f["funding_px"] = f["funding_rate"] * f["price"]
+        daily["funding_px"] = f.groupby("day")["funding_px"].sum()     # measures.py divides by the entry price
     else:
         daily["funding"] = float("nan")  # no funding data at all, so we fill the column with NaN
+        daily["funding_px"] = float("nan")
 
     return daily.reset_index()
 

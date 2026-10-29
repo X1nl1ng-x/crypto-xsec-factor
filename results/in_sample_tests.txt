@@ -2,132 +2,132 @@ in sample: 2020-05-18 to 2024-12-30  weeks: 242  coin-weeks: 38684
 
 Test 1: rank IC
    signal sample  mean IC      t
-    naive    all   -0.072 -7.141
-    naive    90d   -0.053 -4.687
-     cv90    90d   -0.043 -3.344
- cv90_buy    90d   -0.044 -3.403
-cv90_sell    90d   -0.042 -3.229
+    naive    all   -0.072 -7.152
+    naive    90d   -0.053 -4.682
+     cv90    90d   -0.043 -3.328
+ cv90_buy    90d   -0.044 -3.386
+cv90_sell    90d   -0.041 -3.213
 
 Test 2: average weekly return of the five groups (Q1 = lowest signal)
    signal sample     Q1     Q2     Q3     Q4     Q5     H-L       t
-    naive    all 0.0232 0.0117 0.0134 0.0072 0.0105 -0.0126 -2.4646
-    naive    90d 0.0202 0.0138 0.0134 0.0092 0.0134 -0.0068 -1.5861
-     cv90    90d 0.0143 0.0140 0.0139 0.0113 0.0163  0.0020  0.4713
- cv90_buy    90d 0.0138 0.0148 0.0140 0.0110 0.0163  0.0025  0.5810
-cv90_sell    90d 0.0142 0.0147 0.0132 0.0120 0.0158  0.0017  0.3896
+    naive    all 0.0230 0.0114 0.0132 0.0069 0.0104 -0.0126 -2.4794
+    naive    90d 0.0200 0.0136 0.0132 0.0090 0.0132 -0.0068 -1.5971
+     cv90    90d 0.0141 0.0137 0.0137 0.0112 0.0163  0.0022  0.5085
+ cv90_buy    90d 0.0136 0.0145 0.0137 0.0108 0.0162  0.0027  0.6186
+cv90_sell    90d 0.0139 0.0144 0.0130 0.0119 0.0157  0.0018  0.4287
 
 Test 3: Fama-MacBeth, average weekly coefficient per 1 standard deviation
 
 naive alone [all]
-   naive       -0.0009  (t = -0.78)
+   naive       -0.0008  (t = -0.74)
 
 naive + size [all]
-   naive       -0.0007  (t = -0.20)
-   size        -0.0052  (t = -2.31)
-   size_sq      0.0016  (t =  1.09)
+   naive       -0.0006  (t = -0.17)
+   size        -0.0052  (t = -2.34)
+   size_sq      0.0016  (t =  1.08)
 
 naive + age [all]
-   naive       -0.0006  (t = -0.66)
-   log_age      0.0007  (t =  0.30)
+   naive       -0.0005  (t = -0.61)
+   log_age      0.0008  (t =  0.31)
 
 naive + controls [90d]
    naive       -0.0017  (t = -0.56)
-   size        -0.0036  (t = -1.71)
-   size_sq      0.0016  (t =  1.05)
-   log_age     -0.0006  (t = -0.36)
+   size        -0.0036  (t = -1.74)
+   size_sq      0.0016  (t =  1.07)
+   log_age     -0.0006  (t = -0.34)
    mom          0.0033  (t =  1.45)
-   rev         -0.0007  (t = -0.52)
-   vol         -0.0023  (t = -1.06)
-   fund7       -0.0036  (t = -2.77)
+   rev         -0.0006  (t = -0.45)
+   vol         -0.0021  (t = -1.00)
+   fund7       -0.0037  (t = -2.81)
 
 log naive alone [all]
-   log_naive   -0.0037  (t = -2.32)
+   log_naive   -0.0036  (t = -2.33)
 
 log naive + size [all]
-   log_naive   -0.0019  (t = -0.56)
-   size        -0.0035  (t = -0.99)
-   size_sq      0.0014  (t =  2.22)
+   log_naive   -0.0018  (t = -0.54)
+   size        -0.0035  (t = -1.01)
+   size_sq      0.0014  (t =  2.24)
 
 log naive + age [all]
-   log_naive   -0.0026  (t = -2.15)
-   log_age      0.0009  (t =  0.37)
+   log_naive   -0.0025  (t = -2.14)
+   log_age      0.0009  (t =  0.38)
 
 log naive + controls [90d]
-   log_naive    0.0006  (t =  0.26)
+   log_naive    0.0005  (t =  0.22)
    size        -0.0042  (t = -1.69)
-   size_sq      0.0010  (t =  1.35)
-   log_age     -0.0007  (t = -0.41)
-   mom          0.0029  (t =  1.30)
-   rev         -0.0006  (t = -0.41)
-   vol         -0.0021  (t = -0.96)
-   fund7       -0.0037  (t = -2.84)
+   size_sq      0.0010  (t =  1.38)
+   log_age     -0.0007  (t = -0.39)
+   mom          0.0029  (t =  1.31)
+   rev         -0.0005  (t = -0.35)
+   vol         -0.0020  (t = -0.91)
+   fund7       -0.0039  (t = -2.89)
 
 cv90 alone [90d]
-   cv90         0.0011  (t =  0.75)
+   cv90         0.0011  (t =  0.80)
 
 cv90 + controls [90d]
-   cv90         0.0001  (t =  0.07)
-   size        -0.0036  (t = -1.87)
-   size_sq      0.0007  (t =  1.09)
-   log_age     -0.0006  (t = -0.32)
-   mom          0.0033  (t =  1.43)
-   rev         -0.0006  (t = -0.44)
-   vol         -0.0019  (t = -0.82)
-   fund7       -0.0038  (t = -2.86)
+   cv90         0.0001  (t =  0.08)
+   size        -0.0037  (t = -1.91)
+   size_sq      0.0008  (t =  1.12)
+   log_age     -0.0006  (t = -0.30)
+   mom          0.0032  (t =  1.42)
+   rev         -0.0005  (t = -0.38)
+   vol         -0.0018  (t = -0.76)
+   fund7       -0.0039  (t = -2.89)
 
 buy + sell + controls [90d]
-   cv90_buy     0.0088  (t =  0.65)
-   cv90_sell   -0.0087  (t = -0.65)
-   size        -0.0040  (t = -2.00)
-   size_sq      0.0008  (t =  1.20)
-   log_age     -0.0001  (t = -0.05)
-   mom          0.0031  (t =  1.34)
-   rev         -0.0004  (t = -0.28)
-   vol         -0.0018  (t = -0.75)
-   fund7       -0.0040  (t = -3.09)
+   cv90_buy     0.0085  (t =  0.63)
+   cv90_sell   -0.0084  (t = -0.63)
+   size        -0.0040  (t = -2.04)
+   size_sq      0.0009  (t =  1.23)
+   log_age     -0.0001  (t = -0.03)
+   mom          0.0030  (t =  1.33)
+   rev         -0.0003  (t = -0.21)
+   vol         -0.0017  (t = -0.70)
+   fund7       -0.0041  (t = -3.12)
 
-buy - sell: 0.0175  (t = 0.65)
+buy - sell: 0.0169  (t = 0.63)
 correlation of buy and sell measures (average week): 0.993
 
 Test 4: high minus low signal (3 groups), within 3 groups of size or age
 
 naive [all], within groups of size
-   group 1 (lowest)    -0.0072  (t = -1.94)
-   group 2             -0.0049  (t = -1.01)
-   group 3 (highest)    0.0004  (t =  0.08)
-   average             -0.0039  (t = -1.24)
+   group 1 (lowest)    -0.0072  (t = -1.95)
+   group 2             -0.0049  (t = -1.00)
+   group 3 (highest)    0.0005  (t =  0.11)
+   average             -0.0038  (t = -1.23)
 
 naive [all], within groups of age
-   group 1 (lowest)    -0.0153  (t = -3.39)
-   group 2             -0.0053  (t = -1.33)
-   group 3 (highest)   -0.0003  (t = -0.10)
-   average             -0.0070  (t = -2.55)
+   group 1 (lowest)    -0.0153  (t = -3.41)
+   group 2             -0.0052  (t = -1.31)
+   group 3 (highest)   -0.0003  (t = -0.08)
+   average             -0.0069  (t = -2.57)
 
 cv90 [90d], within groups of size
-   group 1 (lowest)    -0.0060  (t = -1.52)
-   group 2              0.0022  (t =  0.44)
-   group 3 (highest)    0.0039  (t =  0.84)
-   average              0.0000  (t =  0.01)
+   group 1 (lowest)    -0.0060  (t = -1.53)
+   group 2              0.0025  (t =  0.48)
+   group 3 (highest)    0.0041  (t =  0.88)
+   average              0.0002  (t =  0.06)
 
 cv90 [90d], within groups of age
-   group 1 (lowest)    -0.0078  (t = -1.65)
-   group 2              0.0076  (t =  1.83)
-   group 3 (highest)   -0.0014  (t = -0.46)
-   average             -0.0006  (t = -0.21)
+   group 1 (lowest)    -0.0078  (t = -1.63)
+   group 2              0.0079  (t =  1.90)
+   group 3 (highest)   -0.0013  (t = -0.42)
+   average             -0.0004  (t = -0.15)
 
 Test 5: long group 1, short group 5; weekly return before and after costs
 
 naive [all]   turnover per week: 1.55
-   before costs       0.0126  (t =  2.46)
-   after  5 bp        0.0118  (t =  2.31)
-   after 10 bp        0.0111  (t =  2.16)
+   before costs       0.0126  (t =  2.48)
+   after  5 bp        0.0118  (t =  2.33)
+   after 10 bp        0.0110  (t =  2.18)
 
 naive [90d]   turnover per week: 1.50
-   before costs       0.0068  (t =  1.59)
-   after  5 bp        0.0060  (t =  1.41)
-   after 10 bp        0.0053  (t =  1.24)
+   before costs       0.0068  (t =  1.60)
+   after  5 bp        0.0061  (t =  1.42)
+   after 10 bp        0.0053  (t =  1.25)
 
 cv90 [90d]   turnover per week: 0.63
-   before costs      -0.0020  (t = -0.47)
-   after  5 bp       -0.0023  (t = -0.55)
-   after 10 bp       -0.0026  (t = -0.62)
+   before costs      -0.0022  (t = -0.51)
+   after  5 bp       -0.0025  (t = -0.58)
+   after 10 bp       -0.0028  (t = -0.66)
