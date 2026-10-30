@@ -35,7 +35,7 @@ rhythm_cv = profile.std() / profile.mean()
 print("coins:", len(profiles))
 print("busiest hour:", profile.idxmax(), round(profile.max(), 2), "%   quietest hour:", profile.idxmin(),
       round(profile.min(), 2), "%   ratio:", round(profile.max() / profile.min(), 2))
-print("63-hour CV from the daily rhythm alone:", round(rhythm_cv, 3))
+print("CV of the 24 hourly shares (average daily profile):", round(rhythm_cv, 3))
 print("typical 63-hour CV of hourly volume (median over coins):", round(pd.Series(cv63).median(), 3))
 
 # ---------- the chart ----------

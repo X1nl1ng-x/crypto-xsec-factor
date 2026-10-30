@@ -1,5 +1,5 @@
 coins: 390
 busiest hour: 14 5.74 %   quietest hour: 21 3.24 %   ratio: 1.77
-63-hour CV from the daily rhythm alone: 0.179
+CV of the 24 hourly shares (average daily profile): 0.179
 typical 63-hour CV of hourly volume (median over coins): 0.696
 saved results/figure2_hourly_profile.png
